@@ -1,0 +1,12 @@
+/************************* [ expo location ] *************************/
+step1: npx expo install expo-location
+
+
+
+
+/*********************** [ Style ] **********************/
+marginLeft:"auto"  > go to the left side
+
+
+/*********************** [ React native image slider ] **********************/
+https://www.npmjs.com/package/react-native-image-slider-box
