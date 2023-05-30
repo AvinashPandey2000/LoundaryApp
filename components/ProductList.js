@@ -1,8 +1,21 @@
 import React from 'react';
 import { View, Text ,StyleSheet,Image,TouchableOpacity} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, decrementQuantity, incrementQuantity } from '../CartReducer';
+import { decrementQty, incrementQty } from '../ProductReducer';
+
 
 export default function ProductList({item}) {
-    console.log(item)
+    const dispatch=useDispatch();
+    const cart =useSelector((state)=> state.cart.cart)
+    const addItemToCart=()=>{
+    dispatch(addToCart(item))  //cart
+    dispatch(incrementQty(item))  //product
+    }
+
+  
+
+    // console.log(item)
   return (
     <View style={styles.ProductListContainer}>
     <Image source={{uri:item.src}} style={styles.image}/>
@@ -12,9 +25,32 @@ export default function ProductList({item}) {
             <Text style={styles.productPrice}>{item.price}$</Text>
         </View>
 
-        <TouchableOpacity style={styles.buttonContainer}>
+        
+
+        {cart.some((c)=>c.id===item.id) ?
+        (
+            <View style={{flexDirection:'row',alignItems:'center',marginRight:10}}>
+            <TouchableOpacity  onPress={()=>{
+                dispatch(incrementQuantity(item));
+                dispatch(incrementQty(item))
+            }} style={styles.incDecBtn}>
+            <Text style={styles.incDec}>+</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.incrementQty}>{item.quantity}</Text>
+
+            <TouchableOpacity  onPress={()=>{
+                dispatch(decrementQuantity(item));
+                dispatch(decrementQty(item));
+            }} style={styles.incDecBtn}>
+            <Text style={styles.incDec}>-</Text>
+            </TouchableOpacity>
+            </View>
+        ):(     
+            <TouchableOpacity style={styles.buttonContainer} onPress={addItemToCart}>
             <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        )}
     </View>
   );
 }
@@ -65,6 +101,19 @@ const styles=StyleSheet.create({
     buttonText:{
         color:'#1398DB',
         fontWeight:'bold'
+    },
+    incDec:{
+        fontWeight:'bold',
+        color:'white',
+        fontSize:22
+    },
+    incrementQty:{
+        marginHorizontal:10
+    },
+    incDecBtn:{
+        backgroundColor:'#1398DB',
+        padding:5,
+        borderRadius:10,
     }
 
 })

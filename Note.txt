@@ -10,3 +10,26 @@ marginLeft:"auto"  > go to the left side
 
 /*********************** [ React native image slider ] **********************/
 https://www.npmjs.com/package/react-native-image-slider-box
+
+/*********************** [ Redux ToolKit ] **********************/
+npm install @reduxjs/toolkit
+npm install react-redux
+
+step 1: Create the cartReducer file 
+step 2: Create the Store 
+Step 3: Give the store data to all the file by using provider so to do that
+        in app.js file raped all the  components into provider
+Step 4: To use the stor data  we use the useSelector
+    ex: const cart =useSelector((state)=>state.cart.cart);
+                                    (state.<storeName>.<ReducerArrayName>)
+
+
+
+useSelector is use to get data from the redux
+useEffect  :   useEffect(()=>{
+
+},[]) 
+
+if we pass the empty error then is  called only one
+but if we pass some value inside in  that empty error then when the pass value update 
+it will redender the file.

@@ -3,16 +3,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import HomeScreen from './screens/HomeScreen';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient';
+import { Provider } from 'react-redux';
+import store from './store';
+import StackNavigation from './StackNavigation';
 
 
 export default function App() {
   return (
+    <Provider store={store}>
     <SafeAreaView style={styles.container}>
-    <LinearGradient colors={['#1398DB', '#53B3E2']}  style={{flex:1}}>
-      <HomeScreen/>
+      <StackNavigation/>
 
-     </LinearGradient>
      </SafeAreaView>
+
+     </Provider>
   );
 }
 

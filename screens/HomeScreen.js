@@ -6,9 +6,22 @@ import { useFonts } from 'expo-font';
 import Cursore from '../components/cursore';
 import Services from '../components/Services';
 import ProductList from '../components/ProductList';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProduct } from '../ProductReducer';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+export default function HomeScreen({ navigation }) {
+  
+  // gat data from the cart
+  const cart =useSelector((state)=>state.cart.cart);
+  const product =useSelector((state)=>state.product.product);
+  const total = cart.map((item) => item.quantity * item.price).reduce((curr,prev) => curr + prev,0);
+
+  console.log("product>>",product);
+  console.log("cart>>",cart);
 
 
-export default function HomeScreen() {
   const [displayCurrentAddress, setdisplayCurrentAddress] = useState("we are loading your location");
   const [locationServicesEnabled, setlocationServicesEnabled] = useState(false);
 
@@ -62,7 +75,7 @@ export default function HomeScreen() {
     }
 
     const { coords } = await Location.getCurrentPositionAsync();
-    console.log(coords)
+    // console.log(coords)
     if (coords) {
       const { latitude, longitude } = coords;
 
@@ -71,7 +84,7 @@ export default function HomeScreen() {
         longitude,
       });
 
-      console.log(response)
+      // console.log(response)
 
       for (let item of response) {
         let address = `${item.name} ${item.city} ${item.postalCode}`;
@@ -80,12 +93,24 @@ export default function HomeScreen() {
     }
   };
   
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    if(product.lenght >0){
+      return;
+    }
+    const fetchProducts=()=>{
+      services.map((service)=> dispatch(getProduct(service)))
+    }
+    fetchProducts()
+  },[])
+
+  console.log("product",product)
 
   // services
   const services=[
     {
       id:1,
-      src:'https://img.freepik.com/free-vector/sticker-design-with-blue-t-shirt-isolated_1308-79625.jpg?w=2000',
+      src:'https://img.freepik.com/premium-vector/cartoon-shirt_119631-192.jpg?w=2000',
       name:'Shirt',
       quantity:0,
       price:10,
@@ -106,10 +131,12 @@ export default function HomeScreen() {
     },
   ]
 
-
   
   return (
-    <ScrollView>
+    <View style={{flex:1}}>
+    <ScrollView >
+    <LinearGradient colors={['#1398DB', '#53B3E2']}  style={{flex:1}}>
+
     <View style={styles.mainContainer}>
     
 
@@ -145,20 +172,38 @@ export default function HomeScreen() {
     <Services/>
 
      {/**Product Sectoin */}
-     {services.map((item,index)=>(
+     {product.map((item,index)=>(
       <ProductList item={item} key={index}/>
       )) }
      
     </View>
+    </LinearGradient>
+
     </ScrollView>
+
+    {/** checkout button */}
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ProcideToCart', {
+        Item: cart.length,
+        toalprice: total,
+      })}>
+      
+      <MaterialCommunityIcons name="cart-variant" size={40} color="#1398DB" />
+      <View>
+      <Text style={styles.buttonText}>Item : {cart.length}</Text>
+      <Text style={styles.buttonText}>Total Price : {total}</Text>
+      </View>
+       </TouchableOpacity>
+
+      </View>
+      
+
   );
 }
 
 const styles=StyleSheet.create({
  mainContainer:{
   paddingHorizontal:10,
-  paddingVertical:10,
-  flex:1,
+  paddingTop:10,
  },
 
 // headerSection
@@ -193,6 +238,22 @@ searchConatiner:{
   borderColor:'white',
   padding:10,
   borderRadius:10,
+},
+
+button:{
+  backgroundColor:'#e1ede6',
+  flexDirection:'row',
+  justifyContent:'space-between',
+  paddingHorizontal:30,
+  paddingVertical:8,
+  borderRadius:10,
+  alignItems:'center'
+},
+buttonText:{
+color:'#53B3E2',
+fontSize: 16,
+lineHeight: 24,
+fontWeight:'bold',
 }
 
 })
