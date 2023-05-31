@@ -35,8 +35,11 @@ export const  CartSlice = createSlice({
                 iteamPresent.quantity--;
             }
         },
+        cleanCart:(state)=>{
+            state.cart=[];
+        }
     }
 })
 
-export const {addToCart,removeFromCart,incrementQuantity,decrementQuantity}= CartSlice.actions;
+export const {addToCart,removeFromCart,incrementQuantity,decrementQuantity,cleanCart}= CartSlice.actions;
 export default CartSlice.reducer;

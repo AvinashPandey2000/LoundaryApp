@@ -11,8 +11,10 @@ import {
  } from 'react-native';
  import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { decrementQuantity, incrementQuantity } from '../CartReducer';
+import { cleanCart, decrementQuantity, incrementQuantity } from '../CartReducer';
 import { decrementQty, incrementQty } from '../ProductReducer';
+import { auth, db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function CheckOutPage({route ,navigation }) {
   const { date, time } = route.params;
@@ -21,9 +23,24 @@ export default function CheckOutPage({route ,navigation }) {
   const dispatch=useDispatch();
 
   // payment 
-  function Pay(){
+// send data to user db
+  const userUid = auth.currentUser.uid;
+  const Pay = async () => {
     navigation.navigate("PaymentDon")
-  }
+    dispatch(cleanCart());
+    await setDoc(
+      doc(db, "users", `${userUid}`),
+      {
+        orders: { ...cart },
+        pickUpDetails: route.params,
+      },
+      {
+        merge: true,
+      }
+    );
+  };
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient colors={["#1398DB", "#53B3E2"]} style={{ flex: 1,paddingHorizontal:20 }}>

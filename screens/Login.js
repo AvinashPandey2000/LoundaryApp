@@ -1,14 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text ,StyleSheet,TouchableOpacity,TextInput,ScrollView} from 'react-native';
 import styles from '../components/CommonStyle'
 import { MaterialIcons,Entypo  } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function Login({ navigation }) {
   const [email,setEmail]=useState();
   const [password,setPassword]=useState();
-  console.log(email)
+  
+
+  useEffect(()=>{
+    const unsubcrbe =auth.onAuthStateChanged((authUser)=>{
+      if(authUser){
+        navigation.navigate('Home')
+      }
+    })
+
+    return unsubcrbe;
+    },[])
+
+    const login=()=>{
+      signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('login error>>',errorMessage)
+      });
+    }
+    
+    
+    
+      
+    
+    
+    
+
+
+
+
+
+
+
   return (
     <SafeAreaView style={{flex:1}}>
     <LinearGradient
@@ -45,8 +85,8 @@ export default function Login({ navigation }) {
       </View>
 
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Register</Text>
+      <TouchableOpacity style={styles.button} onPress={()=>login()}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       <View style={styles.flexRow}>

@@ -1,17 +1,47 @@
 import React, { useState } from 'react';
-import { View, Text ,StyleSheet,TouchableOpacity,TextInput,ScrollView} from 'react-native';
+import { View, Text ,StyleSheet,TouchableOpacity,TextInput,ScrollView, Alert} from 'react-native';
 import styles from '../components/CommonStyle'
 import { MaterialIcons,Entypo  } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Register({ navigation }) {
 
-  const [email,setEmail]=useState();
-  const [password,setPassword]=useState();
-  const [number,setNumber]=useState();
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [number,setNumber]=useState("");
+
+  const registerUser=()=>{
+    if(email ==="" ||password===""||number===""){
+      //showAlert
+      console.log('check the field')
+    }else{
+      createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+  
+    const user = userCredential.user;
+
+		const userEmail=userCredential._tokenResponse.email
+		const myUserUid =auth.currentUser.uid;
+
+		setDoc(doc(db,"users",'${myUserUid}'),{
+			email:email,
+			number:number
+		})
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage)
+    // ..
+  });
 
 
+    }
+  }
   return (
     <SafeAreaView style={{flex:1}}>
     <LinearGradient
@@ -59,7 +89,7 @@ export default function Register({ navigation }) {
       </View>
 
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={()=>registerUser()}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
