@@ -8,6 +8,7 @@ import CheckOutPage from './screens/CheckOutPage'
 import PaymentDon from './screens/PaymentDon';
 import Register from './screens/Register';
 import Login from './screens/Login';
+import IntroSlider from './screens/IntroSlider';
 
 export default function StackNavigation() {
 
@@ -17,6 +18,7 @@ export default function StackNavigation() {
     <NavigationContainer>
     <Stack.Navigator>
 
+      <Stack.Screen name="IntroSlider" component={IntroSlider} options={{headerShown:false}}/>  
       <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>  
       <Stack.Screen name="Register" component={Register} options={{headerShown:false}}/>  
       <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>

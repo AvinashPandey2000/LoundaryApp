@@ -6,13 +6,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Provider } from 'react-redux';
 import store from './store';
 import StackNavigation from './StackNavigation';
+import IntroSlider from './screens/IntroSlider';
 
 
 export default function App() {
   return (
     <Provider store={store}>
     <SafeAreaView style={styles.container}>
-      <StackNavigation/>
+  <StackNavigation/> 
 
      </SafeAreaView>
 
